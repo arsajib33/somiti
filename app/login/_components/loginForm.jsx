@@ -13,28 +13,33 @@ import { Label } from "@/components/ui/label";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { login } from "@/backend/serverAction/loginAction";
+import { ceredntialLogin } from "@/backend/serverAction/loginAction";
 export function LoginForm() {
-  const [error,setError]=useState()
-const router=useRouter()
-async function onSubmit(event) {
-  event.preventDefault();
-  try {
-    const formData = new FormData(event.currentTarget);
 
-    const response = await login(formData);
+    const [error, setError] = useState("");
 
-    if (!!response.error) {
-      console.error(response.error);
-      setError(response.error.message);
-    } else {
-      router.push("/bookings");
+
+    const router = useRouter();
+  
+    async function onSubmit(event) {
+      event.preventDefault();
+  
+      try {
+        setError('')
+        const formData = new FormData(event.currentTarget);
+        const response = await ceredntialLogin(formData);
+  
+        if (!!response.error) {
+          console.error(response.error)
+          setError(response.error);
+        } else {
+          router.push("/courses");
+        }
+      } catch (e) {
+        setError(e.message);
+      }
     }
-  } catch (e) {
-    console.error(e);
-    setError("Check your Credentials");
-  }
-}
+
   return (
     <Card className="mx-auto max-w-sm w-full">
       <CardHeader>
